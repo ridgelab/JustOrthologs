@@ -1,0 +1,75 @@
+# JustOrthologs
+##########################
+
+JustOrthologs
+Created By: Justin Miller, Brandon Pickett, Perry Ridge
+Email: jmiller@byu.edu
+
+##########################
+
+ARGUMENT OPTIONS:
+
+ -h, --help    							show this help message and exit
+ -q	Query Fasta File					A fasta file that has been divided into CDS regions and sorted based on the number of CDS regions.
+ -s	Subject Fasta File					A fasta file that has been divided into CDS regions and sorted based on the number of CDS regions.
+ -o	Output File							A path to an output file that will be created from this program.
+ -t	Number of Cores						The number of Cores available 
+ -d	For More Distantly Related Species	A flag that implements the -d algorithm, which gives better accuracy for more distantly related species.
+ -c	Combine Both Algorithms				Combines both the normal and -d algorithms for the best overall accuracy.
+
+##########################
+
+REQUIREMENTS:
+
+JustOrthologs uses Python version 2.7
+
+Python libraries that must be installed include:
+1. sys
+2. os
+3. multiprocessing
+4. argparse
+
+If any of those libraries is not currently in your Python Path, use the following command:
+pip install --user [library_name]
+to install the library in your path.
+
+##########################
+
+Input Files:
+This algorithm requires two fasta files that have header/sequence alternating lines with an asterisk (*) 
+between every CDS region and at the end of each sequence. To create this file, look at the example files in
+the directory smallTest, or use the included wrapper to extract all CDS regions from a reference genome and 
+a gff3 file.
+
+##########################
+
+USAGE:
+
+Typically, the -c option should be used to get the best overall precision and recall.
+
+The default number of threads is 16. If you want to change that, use the -t option.
+
+The query, subject, and output files  must always be supplied 
+
+Example usage:
+
+python justOrthologs.py -q smallTest/orthologTest/human_pan.fa -s smallTest/orthologTest/pan_human.fa -o output -c -t 16
+
+Running the above command will produce a single output file called output in the current directory. For us, this test took
+approximately 4 seconds of real time and 41 seconds of user time.
+
+##########################
+
+License:
+
+This algorithm is free for all academic and non-profit research purposes. 
+
+We only ask that you please cite the following paper if you use this algorithm:
+JustOrthologs: A Fast, Accurate, and User-Friendly Ortholog-Finding Algorithm
+
+For any for-profit usage, please contact Justin Miller at jmiller@byu.edu
+
+##########################
+
+Thank you, and happy researching!!
+
