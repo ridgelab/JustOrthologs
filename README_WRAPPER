@@ -1,0 +1,96 @@
+# JustOrthologs Wrapper
+##########################
+
+JustOrthologs Wrapper
+Created By: Justin Miller, Brandon Pickett, Perry Ridge
+Email: jmiller@byu.edu
+
+##########################
+
+This wrapper is provided as a courtesy, and may or may not be the fastest or most memory efficient way to extract 
+all CDS regions from 2 gff3 and 2 fasta files. Multithreading is only used for justOrthologs,
+and large fasta files are read into memory for the extracting phase. Typical runtime to extract CDS regions from a 
+complete genome is under an hour, but it may run longer depending on the size of the genome/gff3 file and the 
+processing capabilities of the machine you are running.
+
+##########################
+
+ARGUMENT OPTIONS:
+
+The wrapper has the following options:
+ -h, --help    show this help message and exit
+ -g1 GFF3_ONE  1st GFF3 (gzip allowed with .gz)
+ -g2 GFF3_TWO  2nd GFF3 fasta file (gzip allowed with .gz)
+ -r1 REF_ONE   1st Reference Genome (gzip allowed with .gz)
+ -r2 REF_TWO   2nd Reference Genome (gzip allowed with .gz)
+ -fa1 FASTA1   1st Fasta file (only used without --e)
+ -fa2 FASTA2   2nd Fasta file (only used without --e)
+ -e            Extract CDS regions from genomes
+ -r            Run JustOrthologs
+ -f            Filters genes based on annotations
+ -s            Sort FASTA file for running JustOrthologs
+ -k            Keep All Temporary Files
+ -d            For Distantly Related Species (only with --r)
+ -c            Combine Both Algorithms In JustOrthologs For Best Accuracy
+ -o OUTPUT     Output File for --r
+ -t THREADS    Number of Cores (only affects -r option)
+ -all          Run --e, --f, --s, and --r
+##########################
+
+REQUIREMENTS:
+
+wrapper.py uses Python version 2.7
+
+Python libraries that must be installed include:
+1. sys
+2. os
+3. multiprocessing
+4. argparse
+5. gzip
+
+If any of those libraries is not currently in your Python Path, use the following command:
+pip install --user [library_name]
+to install the library in your path.
+
+The wrapper needs to be used in the same directory as 
+getNoException.py, justOrthologs.py, revised_gff3_parser.py, and sortFastaBySeqLen.sh
+
+##########################
+
+Input Files:
+
+There are many ways to run this program, and the wrapper will tell you where your output files are created.
+Descriptions of what the algorithms can do are in the argument options.
+
+Typical usage requires 2 fasta files that may or may not be gzipped, and 2 gff3 files that may or may not be gzipped.
+
+##########################
+
+USAGE:
+
+The default number of threads is 16. If you want to change that, use the -t option.
+However, the -t option will only affect justOrthologs.py
+
+Example of typical usage:
+
+python wrapper.py -g1 smallTest/wrapperTest/small_pan.gff3 -g2 smallTest/wrapperTest/small_human.gff3 -r1 smallTest/wrapperTest/small_pan.fasta -r2 smallTest/wrapperTest/small_human.fasta -all -o output
+
+Running the above command will produce a single output file called output in the current directory.
+Temporary files are created and removed, so don't worry if you see other files before the job is complete.
+Running the above command takes about 13 seconds of real time and 1 minute of user time on our hardware.
+
+##########################
+
+License:
+
+This algorithm is free for all academic and non-profit research purposes. 
+
+We only ask that you please cite the following paper if you use this algorithm:
+JustOrthologs: A Fast, Accurate, and User-Friendly Ortholog-Finding Algorithm
+
+For any for-profit usage, please contact Justin Miller at jmiller@byu.edu
+
+##########################
+
+Thank you, and happy researching!!
+
