@@ -47,7 +47,7 @@ USAGE:
 
 Typically, the -c option should be used to get the best overall precision and recall.
 
-The default number of threads is 16. If you want to change that, use the -t option.
+The default number of threads is the number of threads available. If you want to change that, use the -t option.
 
 The query, subject, and output files  must always be supplied 
 

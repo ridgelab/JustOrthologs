@@ -6,12 +6,18 @@ import subprocess
 
 TEMP_FILE_NUM = ""
 def checkTempNum(TEMP_FILE_NUM):
+	'''
+	Ensures that the same temporary file is used.
+	'''
 	for fname in os.listdir('.'):
 	    if fname.endswith(TEMP_FILE_NUM):
 			return True
 	return False
 
 def parseArgs():
+	'''
+	Parse arguments.
+	'''
 	parser = argparse.ArgumentParser(description='Provides a variety of tools which allows you to\n'  \
 			+'1.\tExtract CDS regions from a reference genome and fasta file\n' \
 			+'2.\tFilter genes by choosing the longest isoform and ing filters based on annotations\n' \
@@ -119,6 +125,9 @@ def parseArgs():
 
 
 def cleanUp(printFiles):
+	'''
+	Removes all temporary files.
+	'''
 	possibleFiles = {'.extract_1_'+ TEMP_FILE_NUM,'.extract_2_'+TEMP_FILE_NUM,'.filter_1_'+TEMP_FILE_NUM,'.filter_2_'+TEMP_FILE_NUM,'.sort_1_'+TEMP_FILE_NUM,'.sort_2_'+TEMP_FILE_NUM}
 
 	for pos in possibleFiles:
@@ -133,6 +142,9 @@ def cleanUp(printFiles):
 
 
 def runExtract(gff3,ref,keep,num):
+	'''
+	Extracts coding sequences from gff3 files.
+	'''
 	try:
 		temp1 = ".extract_" +str(num) +"_" + TEMP_FILE_NUM 
 		command = ['python', 'revised_gff3_parser.py', gff3, ref, temp1]
@@ -143,6 +155,9 @@ def runExtract(gff3,ref,keep,num):
 		sys.exit()
 	return prog,temp1
 def runFilter(input, num):
+	'''
+	Ensures that all sequences have no annotated exceptions.
+	'''
 	try:
 		temp1 = ".filter_" +str(num) +"_" + TEMP_FILE_NUM
 		command = ['python', 'getNoException.py', input, temp1]
@@ -153,6 +168,9 @@ def runFilter(input, num):
 		sys.exit()
 	return prog,temp1
 def runSort(input, fileName):
+	'''
+	Sorts the files based on number of CDS regions.
+	'''
 	try:
 		command = ['bash', 'sortFastaBySeqLen.sh', input, fileName]
 		prog=  subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -162,6 +180,9 @@ def runSort(input, fileName):
 		sys.exit()
 	return prog,fileName
 def runJustOrthologs(query,subject,threads,output,distant, combine):
+	'''
+	Runs JustOrthologs
+	'''
 	output = "." + output
 	try:
 		command = None
@@ -178,6 +199,9 @@ def runJustOrthologs(query,subject,threads,output,distant, combine):
 
 
 if __name__ =='__main__':
+	'''
+	MAIN
+	'''
 	TEMP_FILE_NUM = str(int(os.urandom(3).encode('hex'),16))
 	while checkTempNum(TEMP_FILE_NUM):
 		TEMP_FILE_NUM = str(int(os.urandom(3).encode('hex'),16))
@@ -311,7 +335,6 @@ if __name__ =='__main__':
 			
 			prog=runJustOrthologs(sort1,sort2,threads,args.output,distant,combine)
 			prog.communicate()
-		
 			output = open(args.output,'w')
 			output.write("Ortholog Group\t" + args.ref_One + "\t" + args.ref_Two +"\n")
 			firstOne = True

@@ -7,6 +7,12 @@ from getCor import getCor, readFile2
 
 
 def searchOtherFile(inputStuff):
+	'''
+	Input: tuple with header from subject, sequence from subject, file path to query, boolean for algorithm.
+	Return: Tuple with best solution so far, header from subject, and header from query
+
+	Calls readFile2, which finds the best correlating genes. If no genes are highly correlated, then nothing is returned.
+	'''
 	header,line,input2,looser = inputStuff
 	info = line.strip().split("*")
 	GLOBAL_BSSF = 2*(len(info)-1)
@@ -24,17 +30,19 @@ def searchOtherFile(inputStuff):
 	return ""
 
 def parseArgs():
+	'''
+	Parses arguments. The query and subject fasta files are required. The output file name is also required.
+	The number of cores is optional. By default, all available threads are used.
+	Although slower, we recommend using the -c flag because it is the most accurate.
+	'''
 	parser = argparse.ArgumentParser(description='Find Orthologs in Two Files.')
 	parser.add_argument("-q",help="Query Fasta File",action="store", dest="query", required=True)
 	parser.add_argument("-s",help="Subject Fasta File",action="store",dest="subject", required=True)
 	parser.add_argument("-o",help="Output File",action="store",dest="output", required=True)
-	parser.add_argument("-t",help="Number of Cores",action="store",dest="threads",type=int, required=False)
+	parser.add_argument("-t",help="Number of Cores",action="store",dest="threads",type=int, default=-1, required=False)
 	parser.add_argument("-d",help="For More Distantly Related Species",action="store_true",dest="distant", required=False)
 	parser.add_argument("-c",help="Combine Both Algorithms For Best Accuracy",action="store_true",dest="combine", required=False)
 	args = parser.parse_args()
-	threads =16
-	if args.threads:
-		threads = args.threads 
 	if not os.path.isfile(args.subject):
 		print args.subject, "is not a correct file path!"
 		sys.exit()
@@ -50,11 +58,19 @@ def parseArgs():
 		sys.exit()
 	if args.combine:
 		both = True
-	return args.subject,args.output,args.query,threads,looser,both
+	return args.subject,args.output,args.query,args.threads,looser,both
 
 def callFindOrthologs(inputFile,input2File,threads,looser):
+	'''
+	Input: Path to subject fasta, path to query fasta, number of threads, boolean for type of algorithm.
+	Return: Results from search for orthologs.
+	'''
 	input = open(inputFile,'r')
-	pool = Pool(threads)
+	pool = ""
+	if threads == -1:
+		pool = Pool()
+	else:
+		pool = Pool(threads)
 	header = ""
 	tasks = []
 	inQueue = 0
@@ -68,6 +84,13 @@ def callFindOrthologs(inputFile,input2File,threads,looser):
 	return temp
 
 def combineFiles(input,in2,output):
+	'''
+	This function combines the output from two ortholog calls. Different orthologs
+		can be identified based on which file is the subject and which file is the query.
+		This function combines the output from both calls to ensure the consistency of JustOrthologs.
+	Input: Results from 1st algorithm, results from 2nd algorithm, output file
+	Returns: The combined result, or writes to an output file.
+	'''
 	keys = set()
 	lineDict = dict()
 	lastLine = ""
@@ -141,6 +164,11 @@ def combineFiles(input,in2,output):
 
 
 def combineFiles2(input,in2,output):
+	'''
+	If the combined falg is true, this function will combine the output from both algorithms.
+	Input: Path to subject and query fasta files and the output file.
+	Returns: None. Just writes to the output file.
+	'''
 	lineDict = dict()
 	keysInDict = set()
 	for info in input:
@@ -188,6 +216,9 @@ def combineFiles2(input,in2,output):
 	output.close()
 
 if __name__ =='__main__':
+	'''
+	Main
+	'''
 	freeze_support()
 	inputFile,outputFile,input2File,threads,looser,both = parseArgs()
 	temp1 = callFindOrthologs(inputFile,input2File,threads,looser)
