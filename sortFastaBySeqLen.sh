@@ -39,7 +39,6 @@ fi
 INPUT="${1:-/dev/stdin}"
 OUTPUT="${2:-/dev/stdout}"
 
-#tr '\n' '\t' < ${INPUT} | sed -r 's/\t>/\n>/g' | awk -v "FS=\t" -v "OFS=\t" '{print $1,$2,length($2)}' | sort -n -t '	' -k 3 | sed -r 's/\t[0-9]+$//' | sed -r 's/\t/\n/' > ${OUTPUT} 
 tr '\n' '\t' < ${INPUT} | sed -r 's/\t>/\n>/g' | awk -v "FS="\t" -v "OFS="\t" '{print $1,$2}' >${OUTPUT}first #| sort -n -t '	' -k 3 | sed -r 's/\t[0-9]+$//' | sed -r 's/\t/\n/' > ${OUTPUT} 
 tr '\n' '\t' < ${INPUT} | sed -r 's/\t>/\n>/g' | sed 's/[^*]//g' | awk '{print length }'>${OUTPUT}second #|awk -v "FS=\t" -v "OFS=\t" '{print $1,$2}'  > ${OUTPUT}
 

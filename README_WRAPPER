@@ -1,4 +1,5 @@
-# JustOrthologs Wrapper
+##########################
+# JustOrthologs  Wrapper #
 ##########################
 
 JustOrthologs Wrapper
@@ -77,7 +78,7 @@ python wrapper.py -g1 smallTest/wrapperTest/small_pan.gff3 -g2 smallTest/wrapper
 
 Running the above command will produce a single output file called output in the current directory.
 Temporary files are created and removed, so don't worry if you see other files before the job is complete.
-Running the above command takes about 13 seconds of real time and 1 minute of user time on our hardware.
+Running the above command takes about 13 seconds of real time and less than 1 minute of user time on our hardware.
 
 ##########################
 

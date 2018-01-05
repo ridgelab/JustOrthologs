@@ -1,0 +1,155 @@
+##########################
+#     Other Scripts      #
+##########################
+
+Other Scripts
+Created By: Justin Miller, Brandon Pickett, Perry Ridge
+Email: jmiller@byu.edu
+
+##########################
+
+combineOrthoGroups.py
+
+The purpose of this program is to take the pairwise output from many JustOrthologs output
+files and combine them into ortholog groups. This script requires one-to-one orthology, meaning
+multiple orthologous genes cannot be present in the same species. It also requires that the same
+species names be used in the input files (i.e., Homo sapiens is different than humans).
+
+
+REQUIREMENTS:
+
+combineOrthoGroups.py is written in python version 2.7 and requires the following libraries:
+1. sys
+2. argparse
+
+These dependencies should already be satisfied if you have run any of the other programs.
+
+
+Input Files:
+This program takes as input, paths to JustOrthologs output files or the path to a
+directory with JustOrthologs output files.
+An optional path to an output file can be provided. 
+
+Run python combineOrthoGroups.py -h for usage arguments.
+
+EXAMPLE USAGE:
+python combineOrthoGroups.py -id smallTest/testCombineOrthoGroups/ -o output
+
+
+##########################
+
+The following scripts are included in the wrapper and can be used together in a single-step process
+described in README_WRAPPER
+
+##########################
+
+
+gff3_parser.py
+
+The purpose of this script is to parse a gff3 file and an accompanying reference fasta file.
+This script will extract all CDS regions from the fasta file and combine them into a single 
+record, with each CDS region followed by an asterisk ('*') to signify the end of the exon.
+
+
+REQUIREMENTS:
+
+gff3_parser uses Python version 2.7
+
+Python libraries that must be installed include:
+1. sys
+2. argparse
+3. gzip
+
+If any of those libraries is not currently in your Python Path, use the following command:
+pip install --user [library_name]
+to install the library in your path.
+
+
+Input Files:
+This program takes as input a path to a gff3 file, a path to a fasta file, and an optional path to an
+output file.
+
+
+EXAMPLE USAGE:
+
+python gff3_parser.py -g smallTest/wrapperTest/small_human.gff3 -f smallTest/wrapperTest/small_human.fasta.gz -o output.fasta
+python gff3_parser.py -g smallTest/wrapperTest/small_human.gff3 -f smallTest/wrapperTest/small_human.fasta.gz > output.fasta
+
+##########################
+
+getNoException.py
+
+The purpose of this script is to eliminate any annotated exceptions
+from a fasta file. Often, gff3 files have gene annotations for partial
+proteins or known error sequences. To eliminate the effects of error
+sequences on our analysis, these sequences are eliminated. Furthermore,
+multiple isoforms of the same gene are often annotated. This script removes
+all but the longest isoform.
+
+
+REQUIREMENTS:
+
+getNoException uses Python version 2.7
+
+Python libraries that must be installed include:
+1. sys
+2. argparse
+3. gzip
+
+If any of those libraries is not currently in your Python Path, use the following command:
+pip install --user [library_name]
+to install the library in your path.
+
+
+Input Files:
+This program takes as input path to an input fasta file, and an optional path to an
+output file.
+
+
+EXAMPLE USAGE:
+
+python getNoException.py -i smallTest/testNoException/test.fasta -o output.fasta
+python getNoException.py -i smallTest/testNoException/test.fasta > output.fasta
+
+##########################
+
+sortFastaBySeqLen.sh
+
+The purpose of this script is to sort a fasta file by the number of 
+CDS regions in a particular gene. The input fasta file requires CDS regions
+to be marked with an asterisk ("*"). The provided script, gff3_parser, can
+create a fasta file formatted correctly for sortFastaBySeqLen.sh.
+
+
+REQUIREMENTS:
+
+sortFastaBySeqLen is a bash shell script that should be run on a Linux machine.
+
+
+Input Files:
+This program takes as input path to an input fasta file, and an optional path to an
+output file. It can also take standard in as the input file.
+
+
+EXAMPLE USAGE:
+
+bash sortFastaBySeqLen.sh smallTest/testNoException/test.fasta output.fasta
+bash sortFastaBySeqLen.sh smallTest/testNoException/test.fasta > output.fasta
+
+
+##########################
+
+License:
+
+These algorithms are free for all academic and non-profit research purposes. 
+
+We ask that you please cite the following paper if you use this algorithm:
+JustOrthologs: A Fast, Accurate, and User-Friendly Ortholog-Finding Algorithm
+
+For any for-profit usage, please contact Justin Miller at jmiller@byu.edu
+
+##########################
+
+Thank you, and happy researching!!
+
+

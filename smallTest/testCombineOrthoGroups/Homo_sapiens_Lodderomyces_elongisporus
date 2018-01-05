@@ -1,0 +1,2 @@
+Ortholog Group	fastaWithAsterisk_sorted/Lodderomyces_elongisporus	fastaWithAsterisk_sorted/Homo_sapiens
+Ortholog Group 1:	>ID=cds98513;Parent=rna140358;Dbxref=CCDS:CCDS12979.1,GeneID:201514,Genbank:NP_775819.1,HGNC:HGNC:27318,HPRD:15861;Name=NP_775819.1;Note=isoform 1 is encoded by transcript variant 1;gbkey=CDS;gene=ZNF584;product=zinc finger protein 584 isoform 1;protein_id=NP_775819.1	>ID=cds3279;Parent=rna3335;Dbxref=Genbank:XP_001526336.1,GeneID:5233112;Name=XP_001526336.1;gbkey=CDS;product=hypothetical protein;protein_id=XP_001526336.1

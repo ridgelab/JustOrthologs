@@ -1,4 +1,5 @@
-# JustOrthologs
+##########################
+#     JustOrthologs      #
 ##########################
 
 JustOrthologs
@@ -16,6 +17,7 @@ ARGUMENT OPTIONS:
  -t	Number of Cores						The number of Cores available 
  -d	For More Distantly Related Species	A flag that implements the -d algorithm, which gives better accuracy for more distantly related species.
  -c	Combine Both Algorithms				Combines both the normal and -d algorithms for the best overall accuracy.
+ -r Correlation value					An optional value for changing the required correlation value between orthologs.
 
 ##########################
 
@@ -53,7 +55,7 @@ The query, subject, and output files  must always be supplied
 
 Example usage:
 
-python justOrthologs.py -q smallTest/orthologTest/human_pan.fa -s smallTest/orthologTest/pan_human.fa -o output -c -t 16
+python justOrthologs.py -q smallTest/orthologTest/bonobo.fa -s smallTest/orthologTest/human.fa -o output -c -t 16
 
 Running the above command will produce a single output file called output in the current directory. For us, this test took
 approximately 4 seconds of real time and 41 seconds of user time.

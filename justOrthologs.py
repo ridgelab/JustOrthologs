@@ -3,7 +3,7 @@ import sys
 from multiprocessing import Process, current_process, freeze_support, Pool
 import argparse
 import os
-from getCor import getCor, readFile2
+from getCor import readFile2
 
 
 def searchOtherFile(inputStuff):
@@ -13,7 +13,7 @@ def searchOtherFile(inputStuff):
 
 	Calls readFile2, which finds the best correlating genes. If no genes are highly correlated, then nothing is returned.
 	'''
-	header,line,input2,looser = inputStuff
+	header,line,input2,looser,cor = inputStuff
 	info = line.strip().split("*")
 	GLOBAL_BSSF = 2*(len(info)-1)
 	if looser:
@@ -22,7 +22,7 @@ def searchOtherFile(inputStuff):
 		else:
 			GLOBAL_BSSF = 0
 	BSSF = GLOBAL_BSSF
-	BSSF,bestOrthologHeader=readFile2(input2,info,BSSF,looser)
+	BSSF,bestOrthologHeader=readFile2(input2,info,BSSF,looser,cor)
 	if type(BSSF) == int:
 		return ""
 	if BSSF <GLOBAL_BSSF:
@@ -31,17 +31,19 @@ def searchOtherFile(inputStuff):
 
 def parseArgs():
 	'''
-	Parses arguments. The query and subject fasta files are required. The output file name is also required.
+	Parses arguments. The query and subject fasta files are required. The output file is optional. 
+		If none is provided, then output will be written to standard out.
 	The number of cores is optional. By default, all available threads are used.
 	Although slower, we recommend using the -c flag because it is the most accurate.
 	'''
 	parser = argparse.ArgumentParser(description='Find Orthologs in Two Files.')
 	parser.add_argument("-q",help="Query Fasta File",action="store", dest="query", required=True)
 	parser.add_argument("-s",help="Subject Fasta File",action="store",dest="subject", required=True)
-	parser.add_argument("-o",help="Output File",action="store",dest="output", required=True)
+	parser.add_argument("-o",help="Output File",action="store",dest="output", required=False)
 	parser.add_argument("-t",help="Number of Cores",action="store",dest="threads",type=int, default=-1, required=False)
 	parser.add_argument("-d",help="For More Distantly Related Species",action="store_true",dest="distant", required=False)
 	parser.add_argument("-c",help="Combine Both Algorithms For Best Accuracy",action="store_true",dest="combine", required=False)
+	parser.add_argument("-r",help="Correlation value",action="store",dest="correlation", default=-1.0,type=float, required=False)
 	args = parser.parse_args()
 	if not os.path.isfile(args.subject):
 		print args.subject, "is not a correct file path!"
@@ -58,9 +60,9 @@ def parseArgs():
 		sys.exit()
 	if args.combine:
 		both = True
-	return args.subject,args.output,args.query,args.threads,looser,both
+	return args.subject,args.output,args.query,args.threads,looser,both,args.correlation
 
-def callFindOrthologs(inputFile,input2File,threads,looser):
+def callFindOrthologs(inputFile,input2File,threads,looser,cor):
 	'''
 	Input: Path to subject fasta, path to query fasta, number of threads, boolean for type of algorithm.
 	Return: Results from search for orthologs.
@@ -78,7 +80,7 @@ def callFindOrthologs(inputFile,input2File,threads,looser):
 		if line[0] == '>':
 			header = line
 			continue
-		tasks.append((header,line,input2File,looser))
+		tasks.append((header,line,input2File,looser,cor))
 	temp = pool.map(searchOtherFile,tasks,chunksize=1)
 	input.close()
 	return temp
@@ -220,20 +222,23 @@ if __name__ =='__main__':
 	Main
 	'''
 	freeze_support()
-	inputFile,outputFile,input2File,threads,looser,both = parseArgs()
-	temp1 = callFindOrthologs(inputFile,input2File,threads,looser)
-	temp2 = callFindOrthologs(input2File,inputFile,threads,looser)
+	inputFile,outputFile,input2File,threads,looser,both,cor = parseArgs()
+	output = sys.stdout
+	temp1 = callFindOrthologs(inputFile,input2File,threads,looser,cor)
+	temp2 = callFindOrthologs(input2File,inputFile,threads,looser,cor)
 	if both:
 		looser = True
-		temp3 = callFindOrthologs(inputFile,input2File,threads,looser)
-		temp4 = callFindOrthologs(input2File,inputFile,threads,looser)
+		temp3 = callFindOrthologs(inputFile,input2File,threads,looser,cor)
+		temp4 = callFindOrthologs(input2File,inputFile,threads,looser,cor)
 		temp5 = combineFiles(temp1,temp2,"") 
 		temp6 = combineFiles(temp3,temp4,"")
-		output = open(outputFile,'w')
-		output.write("Ortholog Group\t" + inputFile + "\t" + input2File +"\n")
+		if outputFile:
+			output = open(outputFile,'w')
+		output.write("Ortholog Group\t" + input2File + "\t" + inputFile +"\n")
 		combineFiles2(temp5,temp6,output)
 	else:
-		output = open(outputFile,'w')
-		output.write("Ortholog Group\t" + inputFile + "\t" + input2File+"\n")
+		if outputFile:
+			output = open(outputFile,'w')
+		output.write("Ortholog Group\t" + input2File + "\t" + inputFile+"\n")
 		combineFiles(temp1,temp2,output)
 	

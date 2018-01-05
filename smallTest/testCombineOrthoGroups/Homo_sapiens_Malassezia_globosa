@@ -1,0 +1,2 @@
+Ortholog Group	fastaWithAsterisk_sorted/Malassezia_globosa	fastaWithAsterisk_sorted/Homo_sapiens
+Ortholog Group 1:	>ID=cds26766;Parent=rna49841;Dbxref=GeneID:121274,Genbank:NP_689533.2,HGNC:HGNC:31834,MIM:613906;Name=NP_689533.2;Note=isoform 1 is encoded by transcript variant 1;gbkey=CDS;gene=ZNF641;product=zinc finger protein 641 isoform 1;protein_id=NP_689533.2	>ID=cds2912;Parent=rna2912;Dbxref=Genbank:XP_001731487.1,GeneID:5855794;Name=XP_001731487.1;gbkey=CDS;product=hypothetical protein;protein_id=XP_001731487.1

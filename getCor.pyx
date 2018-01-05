@@ -2,11 +2,8 @@
 
 
 
-def getCor(largeList,smallList,totalCor,looser):
-	cdef float GLOBAL_BEST_COR, bestCor, A,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,cor
-	GLOBAL_BEST_COR = 0.05
-	if looser:
-		GLOBAL_BEST_COR = 0.1
+def getCor(largeList,smallList,totalCor,looser,GLOBAL_BEST_COR):
+	cdef float bestCor, A,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,cor
 	for pos in range(len(smallList)-1):
 		bestCor = GLOBAL_BEST_COR
 		for otherPos in xrange(len(largeList)-1): 
@@ -67,13 +64,7 @@ def getCor(largeList,smallList,totalCor,looser):
 		totalCor+=2 
 	return totalCor
 
-largeList = []
-smallList = []
-totalCor = 12
-looser = True
-getCor(largeList,smallList,totalCor,looser)
-
-def readFile2(input2,info,BSSF,looser):
+def readFile2(input2,info,BSSF,looser,cor):
 	cdef int smallestStringSize, bestOrthNum,numSeen
 	in2 = open(input2,'r')
 	smallestStringSize = len(info)-1
@@ -103,7 +94,12 @@ def readFile2(input2,info,BSSF,looser):
 		if (len(info2)-len(info))>(maxNumSkipped+1):
 			break
 		totalCor = (2*abs(len(info)-len(info2)))
-		totalCor = getCor(largeList,smallList,totalCor,looser)
+		if cor==-1 and looser:
+			totalCor = getCor(largeList,smallList,totalCor,looser,0.1)
+		elif cor==-1 and not looser:
+			totalCor = getCor(largeList,smallList,totalCor,looser,0.05)
+		else:
+			totalCor = getCor(largeList,smallList,totalCor,looser,cor)
 		if totalCor<BSSF:
 			BSSF =totalCor
 			bestOrthologHeader = otherHeader

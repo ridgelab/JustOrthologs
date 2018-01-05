@@ -147,7 +147,7 @@ def runExtract(gff3,ref,keep,num):
 	'''
 	try:
 		temp1 = ".extract_" +str(num) +"_" + TEMP_FILE_NUM 
-		command = ['python', 'revised_gff3_parser.py', gff3, ref, temp1]
+		command = ['python', 'gff3_parser.py', '-g', gff3, '-f', ref, '-o', temp1]
 		prog=  subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	except Exception:
 		print "Error Occurred in Extract"
@@ -160,7 +160,7 @@ def runFilter(input, num):
 	'''
 	try:
 		temp1 = ".filter_" +str(num) +"_" + TEMP_FILE_NUM
-		command = ['python', 'getNoException.py', input, temp1]
+		command = ['python', 'getNoException.py', '-i', input, '-o', temp1]
 		prog=  subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	except Exception:
 		print "Error Occurred in Filter"
