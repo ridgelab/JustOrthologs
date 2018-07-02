@@ -100,7 +100,10 @@ def readFasta(fasta):
 		if line[0] =='>':
 			if sequenceLine !="":
 				allSeq[lastHeader] = sequenceLine
-			lastHeader = line.split("|")[3]
+			if line.count('|')>=3:
+				lastHeader = line.split("|")[3]
+			else:
+				lastHeader= line[1:].strip()
 			sequenceLine = ""
 			continue
 		sequenceLine +=line.strip()

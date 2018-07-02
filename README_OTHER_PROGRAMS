@@ -50,6 +50,13 @@ The purpose of this script is to parse a gff3 file and an accompanying reference
 This script will extract all CDS regions from the fasta file and combine them into a single 
 record, with each CDS region followed by an asterisk ('*') to signify the end of the exon.
 
+The FASTA header lines must be formatted in one of two ways:
+1. >NC_######
+OR
+2. >gi|####|ref|NC_#####
+
+where NC_#### is the identifier used in the gff3 file.
+
 
 REQUIREMENTS:
 
