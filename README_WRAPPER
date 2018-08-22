@@ -74,7 +74,7 @@ However, the -t option will only affect justOrthologs.py
 
 Example of typical usage:
 
-python wrapper.py -g1 smallTest/wrapperTest/small_pan.gff3 -g2 smallTest/wrapperTest/small_human.gff3 -r1 smallTest/wrapperTest/small_pan.fasta -r2 smallTest/wrapperTest/small_human.fasta -all -o output
+python wrapper.py -g1 smallTest/wrapperTest/small_pan.gff3 -g2 smallTest/wrapperTest/small_human.gff3 -r1 smallTest/wrapperTest/small_pan.fasta.gz -r2 smallTest/wrapperTest/small_human.fasta.gz -all -o output
 
 Running the above command will produce a single output file called output in the current directory.
 Temporary files are created and removed, so don't worry if you see other files before the job is complete.

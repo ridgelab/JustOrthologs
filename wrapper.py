@@ -183,7 +183,7 @@ def runJustOrthologs(query,subject,threads,output,distant, combine):
 	'''
 	Runs JustOrthologs
 	'''
-	output = "." + output
+	output = output + TEMP_FILE_NUM
 	try:
 		command = None
 		if distant:
@@ -338,13 +338,13 @@ if __name__ =='__main__':
 			output = open(args.output,'w')
 			output.write("Ortholog Group\t" + args.ref_One + "\t" + args.ref_Two +"\n")
 			firstOne = True
-			for line in open("." +args.output,'r'):	
+			for line in open(args.output + TEMP_FILE_NUM,'r'):	
 				if firstOne:
 					firstOne =False
 					continue
 				output.write(line)
 
-			os.remove("." + args.output)
+			os.remove(args.output + TEMP_FILE_NUM)
 			
 			if not args.keep:
 				if not args.fasta2 or args.fasta2!=sort2:

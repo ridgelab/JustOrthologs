@@ -1,0 +1,44 @@
+##########################
+#run_multiple_species.sh #
+##########################
+
+
+Created By: Justin Miller
+Email: jmiller@byu.edu
+
+##########################
+
+ARGUMENT OPTIONS:
+
+ -h, --help    							show this help message and exit
+ -i required input directory			Contains .fasta and .gff3 files. Must contain same base name (e.g., h_sapiens.gff3 and h_sapiens.fasta.gz)
+ -o	required output directory			New Directory where JustOrthologs pairwise output files will be written.
+ -e	required end output file			This will contain the ortholog groups after combining the pairwise comparisons
+
+##########################
+
+
+Example usage:
+
+bash run_multiple_species.sh -i smallTest/wrapperTest/ -o outputDir/ -e output_ortholog_groups
+
+Running the above command will produce a single output file called output_ortholog_groups in the current directory. 
+It will also produce all pairwise comparisons for the species found in smallTest/wrapperTest.
+For us, this command took approximately 4 minutes of user time.
+
+##########################
+
+License:
+
+This algorithm is free for all academic and non-profit research purposes. 
+
+We only ask that you please cite the following paper if you use this algorithm:
+JustOrthologs: A Fast, Accurate, and User-Friendly Ortholog-Finding Algorithm
+
+For any for-profit usage, please contact Justin Miller at jmiller@byu.edu
+
+##########################
+
+Thank you, and happy researching!!
+
+
