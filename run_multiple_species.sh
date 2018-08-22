@@ -4,12 +4,16 @@ OPTIND=1         # Reset in case getopts has been used previously in the shell.
 input_dir=""
 output_dir=""
 end_output=""
-while getopts "h?:i:e:o:" opt; do
+gff_extension=".gff3"
+fasta_extension=".fasta"
+while getopts "h?:f:g:i:e:o:" opt; do
     case "$opt" in
     h|\?)
 	echo "-i is a required directory with input .fasta and .gff3 files. "
 		echo "-o is a required output directory for pairwise JustOrtholog comparisons"
 		echo "-e is a required end output file for the combined analysis"
+		echo "-f is optional and is the extension for fasta files in the input directory. Default=.fasta"
+		echo "-g is optional and is the extension for gff3 files in the input directory. Default=.gff3"
 		echo "-h shows this help message"
 		echo "-v shows verbose messages of progress"
         exit 0
@@ -22,6 +26,10 @@ while getopts "h?:i:e:o:" opt; do
 		;;
 	e)	end_output=$OPTARG
 		;;
+	g)	gff_extension=$OPTARG
+		;;
+	f)	fasta_extension=$OPTARG
+		;;
     o)  output_dir=$OPTARG
 		if [[ "${output_dir: -1}" != '/' ]]; then
 			output_dir=${output_dir}"/"	
@@ -31,14 +39,13 @@ while getopts "h?:i:e:o:" opt; do
 done
 shift $(( OPTIND-1 )) 
 
-
 set -- `ls -1 ${input_dir} | sed -e 's/\..*$//' | uniq`
 for a; do
 	file_a=`basename ${a%%.*}`
     shift
     for b; do
 		file_b=`basename ${b%%.*}`
-		python wrapper.py -g1 ${a}".gff3" -g2 ${b}".gff3" -r1 ${a}".fasta.gz" -r2 ${b}".fasta.gz" -all -o ${output_dir}/${file_a}_${file_b}
+		python wrapper.py -g1 "${a}${gff_extension}" -g2 "${b}${gff_extension}" -r1 "${a}${fasta_extension}" -r2 "${b}${fasta_extension}" -all -o ${output_dir}/${file_a}_${file_b}
     done
 done
 

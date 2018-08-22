@@ -14,13 +14,15 @@ ARGUMENT OPTIONS:
  -i required input directory			Contains .fasta and .gff3 files. Must contain same base name (e.g., h_sapiens.gff3 and h_sapiens.fasta.gz)
  -o	required output directory			New Directory where JustOrthologs pairwise output files will be written.
  -e	required end output file			This will contain the ortholog groups after combining the pairwise comparisons
+ -f optional extension for fasta files in the input directory. Default=.fasta"
+ -g optional extension for gff3 files in the input directory. Default=.gff3"
 
 ##########################
 
 
 Example usage:
 
-bash run_multiple_species.sh -i smallTest/wrapperTest/ -o outputDir/ -e output_ortholog_groups
+bash run_multiple_species.sh -i smallTest/wrapperTest/ -o outputDir/ -e output_ortholog_groups -f .fasta.gz -g .gff3
 
 Running the above command will produce a single output file called output_ortholog_groups in the current directory. 
 It will also produce all pairwise comparisons for the species found in smallTest/wrapperTest.
