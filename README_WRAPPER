@@ -48,6 +48,7 @@ Python libraries that must be installed include:
 3. multiprocessing
 4. argparse
 5. gzip
+6. biopython
 
 If any of those libraries is not currently in your Python Path, use the following command:
 pip install --user [library_name]
