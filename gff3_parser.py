@@ -108,6 +108,8 @@ def readFasta(fasta):
             else:
                 if line.count('|')>=1:
                     lastHeader = line.split("|")[1]
+                elif line.count(' ')>0:
+                    lastHeader = line.split(" ")[0][1:]
                 else:
                     lastHeader= line[1:].strip()
             sequenceLine = ""
