@@ -130,7 +130,9 @@ create a fasta file formatted correctly for sortFastaBySeqLen.sh.
 
 REQUIREMENTS:
 
-sortFastaBySeqLen is a bash shell script that should be run on a Linux machine.
+sortFastaBySeqLen is a bash shell script that should be run on Linux or MacOS.
+If you are using MacOS, make sure that gsed is installed:
+    brew install gnu-sed
 
 
 Input Files:

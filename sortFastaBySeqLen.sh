@@ -38,11 +38,17 @@ fi
 
 INPUT="${1:-/dev/stdin}"
 OUTPUT="${2:-/dev/stdout}"
+SED_EXEC="sed"
+OS_TYPE=`uname -s`
+if [ "${OS_TYPE}" == "Darwin" ]
+then
+            SED_EXEC="gsed"
+fi
 
-tr '\n' '\t' < ${INPUT} | sed -r 's/\t>/\n>/g' | awk -v "FS="\t" -v "OFS="\t" '{print $1,$2}' >${OUTPUT}first #| sort -n -t '	' -k 3 | sed -r 's/\t[0-9]+$//' | sed -r 's/\t/\n/' > ${OUTPUT} 
-tr '\n' '\t' < ${INPUT} | sed -r 's/\t>/\n>/g' | sed 's/[^*]//g' | awk '{print length }'>${OUTPUT}second #|awk -v "FS=\t" -v "OFS=\t" '{print $1,$2}'  > ${OUTPUT}
+tr '\n' '\t' < ${INPUT} | ${SED_EXEC} -r 's/\t>/\n>/g' | awk -v "FS="\t" -v "OFS="\t" '{print $1,$2}' >${OUTPUT}first #| sort -n -t '	' -k 3 | ${SED_EXEC} -r 's/\t[0-9]+$//' | ${SED_EXEC} -r 's/\t/\n/' > ${OUTPUT} 
+tr '\n' '\t' < ${INPUT} | ${SED_EXEC} -r 's/\t>/\n>/g' | ${SED_EXEC} 's/[^*]//g' | awk '{print length }'>${OUTPUT}second #|awk -v "FS=\t" -v "OFS=\t" '{print $1,$2}'  > ${OUTPUT}
 
-paste ${OUTPUT}first ${OUTPUT}second | awk -v "FS="\t" -v "OFS="\t" '{print $1,$2,$3}' |sort -n -t '	' -k 3 | sed -r 's/\t/\n/' | sed -r 's/\t[0-9]+ *$//'  |sed -r 's/^ +//' > ${OUTPUT} # | awk '{print $1,"\t",$2}' |sed -r 's/\t/\n/' > ${OUTPUT} 
+paste ${OUTPUT}first ${OUTPUT}second | awk -v "FS="\t" -v "OFS="\t" '{print $1,$2,$3}' |sort -n -t '	' -k 3 | ${SED_EXEC} -r 's/\t/\n/' | ${SED_EXEC} -r 's/\t[0-9]+ *$//'  |${SED_EXEC} -r 's/^ +//' > ${OUTPUT} # | awk '{print $1,"\t",$2}' |${SED_EXEC} -r 's/\t/\n/' > ${OUTPUT} 
 
 rm ${OUTPUT}first
 rm ${OUTPUT}second

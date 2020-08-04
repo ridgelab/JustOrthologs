@@ -19,6 +19,13 @@ ARGUMENT OPTIONS:
 
 ##########################
 
+REQUIREMENTS:
+If you are using MacOS, make sure that gsed is installed:
+    brew install gnu-sed
+
+See other requirements in README and README_WRAPPER
+
+##########################
 
 Example usage:
 

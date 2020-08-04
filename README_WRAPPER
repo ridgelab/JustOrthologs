@@ -40,6 +40,10 @@ The wrapper has the following options:
 
 REQUIREMENTS:
 
+If you are using MacOS, make sure that gsed is installed:
+    brew install gnu-sed
+
+
 wrapper.py uses Python version 2.7
 
 Python libraries that must be installed include:
