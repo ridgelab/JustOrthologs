@@ -39,7 +39,13 @@ while getopts "h?:f:g:i:e:o:" opt; do
 done
 shift $(( OPTIND-1 )) 
 
-set -- `ls -1 ${input_dir} | sed -e 's/\..*$//' | uniq`
+SED_EXEC="sed"
+OS_TYPE=`uname -s`
+if [ "${OS_TYPE}" == "Darwin" ]
+then
+            SED_EXEC="gsed"
+fi
+set -- `ls -1 ${input_dir} | ${SED_EXEC} -e 's/\..*$//' | uniq`
 for a; do
 	file_a=`basename ${a%%.*}`
     shift
