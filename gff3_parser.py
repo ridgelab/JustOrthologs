@@ -1,9 +1,8 @@
-#! /usr/bin/env python
+#! /usr/bin/env python 3
 import sys
-from Bio.Seq import Seq
-from Bio.Alphabet import IUPAC
 import gzip
 import argparse
+from Bio.Seq import Seq
 #from multiprocessing import Process, current_process, freeze_support, Pool
 #Multiproccessing is not necessary because the program is fast. 
 #However, if it were to be implemented, the commented out lines would probably be necessary.
@@ -17,34 +16,37 @@ def parseArgs():
     parser.add_argument("-g",help="Input GFF3 file",action="store", dest="gff", required=True)
     parser.add_argument("-f",help="Input Fasta File",action="store",dest="fasta", required=True)
     parser.add_argument("-o",help="Output File",action="store",dest="output", required=False)
+    parser.add_argument("-z",help="Gzip Output File",action="store_true",dest="gzip", required=False)
     #parser.add_argument("-t",help="Number of Cores",action="store",dest="threads",type=int, default=-1, required=False)
     args = parser.parse_args()
     if not os.path.isfile(args.gff):
-        print args.gff, "is not a correct file path!"
+        print (args.gff, "is not a correct file path!")
         sys.exit()
     if not os.path.isfile(args.fasta):
-        print args.fasta, "is not a correct file path!"
+        print (args.fasta, "is not a correct file path!")
         sys.exit()
 
     return args
 
-def readGFF(output, gff, allSeq):
+def readGFF(output, gff, allSeq,args):
     '''    
     Reads the gff3 file and extracts CDS regions
     Input: gff3 file and dictionary of all sequences
 
     '''
-    input = ""
+    inputF = ""
     if gff[-3:]=='.gz':
-        input = gzip.open(gff,'r')
+        inputF = gzip.open(gff,'r')
     else:
-        input = open(gff,'r')
+        inputF = open(gff,'r')
     currentAccession = ""
     currentGene = ""
     currentSeq = ""
     lastBadAccession = ""
     afterFirst=False
-    for line in input:
+    for line in inputF:
+        if isinstance(line,bytes):
+            line = line.decode('UTF-8')
         if line[0]=='#':
             continue
         info = line.strip().split("\t")
@@ -58,10 +60,16 @@ def readGFF(output, gff, allSeq):
             currentGene = gene
             if accession in allSeq:
                 if afterFirst:
-                    output.write("\n")
+                    if args.gzip:
+                        output.write(b'\n')
+                    else:
+                        output.write('\n')
                 afterFirst = True
                 
-                output.write('>'+info[8]+'\n')
+                if args.gzip:
+                    output.write(('>'+info[8]+'\n').encode())
+                else:
+                    output.write('>'+info[8]+'\n')
                 currentAccession = accession
                 currentSeq = allSeq[accession]
             if accession != currentAccession:
@@ -69,16 +77,27 @@ def readGFF(output, gff, allSeq):
                 continue
         smaller = currentSeq[int(info[3])-1:int(info[4])]
         if len(smaller) ==0:
-            print 'a'
+            print ('Sequence length is zero')
             continue
         if info[6] == '-':
             my_seq = Seq(smaller)
-            output.write(str(my_seq.reverse_complement())+'*')
+            if args.gzip:
+                output.write(str(my_seq.reverse_complement()).encode()+b'*')
+            else:
+                output.write(str(my_seq.reverse_complement())+'*')
         else:
-            output.write(smaller+'*')
-    output.write("\n")    
+            if args.gzip:
+                output.write(smaller.encode()+b'*')
+            else:
+                output.write(smaller+'*')
+    
+    if args.gzip:
+        output.write(b"\n")    
+    else:
+        output.write("\n")    
+
     output.close()
-    input.close()    
+    inputF.close()    
 
 
 def readFasta(fasta):
@@ -96,22 +115,20 @@ def readFasta(fasta):
     lastHeader = ""
     sequenceLine = ""
     for line in allDNA:
+        if isinstance(line,bytes):
+            line = line.decode('UTF-8')
         
         if line[0] =='>':
             if sequenceLine !="":
                 allSeq[lastHeader] = sequenceLine
-            if line.startswith('>gi'):
-                if line.count('|')>=3:
-                    lastHeader = line.split("|")[3]
-                else:
-                    lastHeader= line[1:].strip()
+            if line.count('|')>=3:
+                lastHeader = line.split("|")[3]
+            elif line.count(' ')>=2:
+                lastHeader = line.split(" ")[0][1:]
+            elif line.count('\t')>=2:
+                lastHeader = line.split("\t")[0][1:]
             else:
-                if line.count('|')>=1:
-                    lastHeader = line.split("|")[1]
-                elif line.count(' ')>0:
-                    lastHeader = line.split(" ")[0][1:]
-                else:
-                    lastHeader= line[1:].strip()
+                lastHeader= line[1:].strip()[1:]
             sequenceLine = ""
             continue
         sequenceLine +=line.strip()
@@ -129,6 +146,12 @@ if __name__ =='__main__':
     sequences = readFasta(args.fasta)
     output = sys.stdout
     if args.output:
-        output = open(args.output,'w')
-    readGFF(output,args.gff,sequences)
+        if args.gzip:
+            outputFile = args.output
+            if not outputFile.endswith(".gz"):
+                outputFile += ".gz"
+            output = gzip.open(outputFile,'w')
+        else:
+            output = open(args.output,'w')
+    readGFF(output,args.gff,sequences,args)
 
