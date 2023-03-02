@@ -128,7 +128,7 @@ def readFasta(fasta):
             elif line.count('\t')>=2:
                 lastHeader = line.split("\t")[0][1:]
             else:
-                lastHeader= line[1:].strip()[1:]
+                lastHeader= line[1:].strip()
             sequenceLine = ""
             continue
         sequenceLine +=line.strip()
