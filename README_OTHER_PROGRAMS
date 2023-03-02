@@ -57,6 +57,7 @@ OR
 
 where NC_#### is the identifier used in the gff3 file.
 
+The current reference genome and gff3 file can be found here: https://www.ncbi.nlm.nih.gov/genome/guide/human/
 
 REQUIREMENTS:
 
